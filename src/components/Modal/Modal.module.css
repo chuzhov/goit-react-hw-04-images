@@ -32,3 +32,11 @@
   display: block;
   width: 100%;
 }
+
+.error {
+  padding: 1rem;
+  text-align: center;
+
+  background-color: lightsalmon;
+  color: darkred;
+}

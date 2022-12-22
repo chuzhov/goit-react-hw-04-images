@@ -1,4 +1,4 @@
-import css from 'components/ImageGalleryItem/ImageGalleryItem.module';
+import css from 'components/ImageGalleryItem/ImageGalleryItem.module.css';
 
 const ImageGalleryItem = ({ url, alt, largeURL, onOpenModal }) => {
   return (

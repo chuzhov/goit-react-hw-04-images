@@ -14,3 +14,11 @@
 
   list-style: none;
 }
+
+.error {
+  padding: 1rem;
+  text-align: center;
+
+  background-color: lightsalmon;
+  color: darkred;
+}

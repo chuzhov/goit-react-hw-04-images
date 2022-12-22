@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 async function axiosFetchPictures(query, currentPageNum, per_page) {
-  const hostURL = 'https://pixabay.com/api/';
+  const hostURL = 'https://pixbay.com/api/';
 
   const API_KEY = '31408282-c2e36d8dbb4ab0017da4fad76';
 

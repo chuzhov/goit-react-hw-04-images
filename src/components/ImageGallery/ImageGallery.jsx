@@ -41,9 +41,9 @@ class ImageGallery extends Component {
         });
       }
     } catch (error) {
-      this.setState({ isLoading: false });
+      this.setState({ isLoading: false, error: error, isModalOpened: true });
       //      toast.error('Something went wrong, please try again later');
-      console.log(error);
+      console.dir(error.message);
     } finally {
       //spinner stop
     }
@@ -66,7 +66,7 @@ class ImageGallery extends Component {
   };
 
   closeModal = () => {
-    this.setState({ isModalOpened: false });
+    this.setState({ isModalOpened: false, error: null });
   };
 
   render() {
@@ -94,8 +94,16 @@ class ImageGallery extends Component {
             <img
               src={this.state.modalData.imageURL}
               alt={this.state.modalData.alt}
-              width="480"
             />
+          </Modal>
+        )}
+        {this.state.isModalOpened && this.state.error && (
+          <Modal closeModal={this.closeModal}>
+            <div className={css['error']}>
+              <p>Error during getting data from server:</p>
+              <h2>{this.state.error.message}</h2>
+              <p>Please, press ESC to continue</p>
+            </div>
           </Modal>
         )}
       </>
