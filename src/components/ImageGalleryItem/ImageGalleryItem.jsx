@@ -1,8 +1,13 @@
 import css from 'components/ImageGalleryItem/ImageGalleryItem.module';
 
-const ImageGalleryItem = ({ url, alt }) => {
+const ImageGalleryItem = ({ url, alt, largeURL, onOpenModal }) => {
   return (
-    <li className={css['item']}>
+    <li
+      id={largeURL}
+      className={css['item']}
+      data={largeURL}
+      onClick={event => onOpenModal(event)}
+    >
       <img src={url} width="240" alt={alt} />
     </li>
   );

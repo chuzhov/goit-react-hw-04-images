@@ -3,12 +3,15 @@ import { Component } from 'react';
 import axiosFetchPictures from 'utils/api';
 import ImageGalleryItem from 'components/ImageGalleryItem/ImageGalleryItem';
 import Button from 'components/Button/Button';
+import Modal from 'components/Modal/Modal';
 
 class ImageGallery extends Component {
   state = {
     images: [],
     currentPage: 1,
     totalHits: 0,
+    isModalOpened: false,
+    modalData: { imageURL: '', alt: '' },
     isLoading: false,
     error: null,
   };
@@ -52,6 +55,20 @@ class ImageGallery extends Component {
     });
   };
 
+  openModal = event => {
+    this.setState({
+      isModalOpened: true,
+      modalData: {
+        imageURL: event.currentTarget.id,
+        alt: event.currentTarget.alt,
+      },
+    });
+  };
+
+  closeModal = () => {
+    this.setState({ isModalOpened: false });
+  };
+
   render() {
     const items = this.state.images;
 
@@ -60,15 +77,26 @@ class ImageGallery extends Component {
         <ul className={css['gallery']}>
           {items.map(item => (
             <ImageGalleryItem
-              key={item.id}
+              key={'key-' + item.id}
               url={item.previewURL}
               alt={item.tags}
+              largeURL={item.largeImageURL}
+              onOpenModal={this.openModal}
             />
           ))}
         </ul>
         {this.state.currentPage * ImageGallery.PER_PAGE <
           this.state.totalHits && (
           <Button onClickHandler={this.increasePageNumber} />
+        )}
+        {this.state.isModalOpened && (
+          <Modal closeModal={this.closeModal}>
+            <img
+              src={this.state.modalData.imageURL}
+              alt={this.state.modalData.alt}
+              width="480"
+            />
+          </Modal>
         )}
       </>
     );

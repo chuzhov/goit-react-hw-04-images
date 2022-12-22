@@ -5,9 +5,6 @@ import ImageGallery from './ImageGallery/ImageGallery';
 export class App extends Component {
   state = {
     query: '',
-    hasMore: false,
-    isLoading: false,
-    error: null,
   };
 
   getQuery = newQuery => {
