@@ -4,8 +4,8 @@ import ImageGallery from './ImageGallery/ImageGallery';
 
 export class App extends Component {
   state = {
-    gallery: [],
     query: '',
+    hasMore: false,
     isLoading: false,
     error: null,
   };
@@ -18,15 +18,7 @@ export class App extends Component {
 
   render() {
     return (
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          fontSize: 40,
-          color: '#010101',
-        }}
-      >
+      <div>
         <SearchBar getQuery={this.getQuery} />
         <ImageGallery query={this.state.query} />
       </div>

@@ -5,7 +5,6 @@ const SearchBar = ({ getQuery }) => {
     event.preventDefault();
     const newQuery = event.target[0].value.trim().toLowerCase();
     getQuery(newQuery);
-    event.target[0].value = '';
   };
 
   return (

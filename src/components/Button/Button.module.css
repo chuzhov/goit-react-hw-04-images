@@ -1,0 +1,25 @@
+.add-more__wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  height: 5rem;
+}
+
+.button {
+  width: 150px;
+  height: 2rem;
+
+  border-radius: 5px;
+  border: none;
+  box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+
+  cursor: pointer;
+
+  font-size: 14px;
+  color: white;
+  background: #2193b0;
+  background: linear-gradient(to right, #3ea2b8, #0d657b);
+
+  box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+}
