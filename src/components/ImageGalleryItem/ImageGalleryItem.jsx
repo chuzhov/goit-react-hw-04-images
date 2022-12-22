@@ -1,4 +1,5 @@
 import css from 'components/ImageGalleryItem/ImageGalleryItem.module.css';
+import PropTypes from 'prop-types';
 
 const ImageGalleryItem = ({ url, alt, largeURL, onOpenModal }) => {
   return (
@@ -11,6 +12,13 @@ const ImageGalleryItem = ({ url, alt, largeURL, onOpenModal }) => {
       <img src={url} width="240" alt={alt} />
     </li>
   );
+};
+
+ImageGalleryItem.propTypes = {
+  url: PropTypes.string.isRequired,
+  alt: PropTypes.string.isRequired,
+  largeURL: PropTypes.string.isRequired,
+  onOpenModal: PropTypes.func.isRequired,
 };
 
 export default ImageGalleryItem;

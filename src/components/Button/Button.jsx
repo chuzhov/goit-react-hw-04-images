@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import css from './Button.module.css';
 
 const Button = ({ onClickHandler }) => {
@@ -9,4 +10,9 @@ const Button = ({ onClickHandler }) => {
     </div>
   );
 };
+
+Button.propTypes = {
+  onClickHandler: PropTypes.func.isRequired,
+};
+
 export default Button;

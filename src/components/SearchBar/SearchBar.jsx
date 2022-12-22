@@ -1,4 +1,5 @@
 import css from 'components/SearchBar/SearchBar.module.css';
+import PropTypes from 'prop-types';
 
 const SearchBar = ({ getQuery }) => {
   const onSubmitQuery = event => {
@@ -24,6 +25,9 @@ const SearchBar = ({ getQuery }) => {
       </form>
     </div>
   );
+};
+SearchBar.propTypes = {
+  getQuery: PropTypes.func.isRequired,
 };
 
 export default SearchBar;

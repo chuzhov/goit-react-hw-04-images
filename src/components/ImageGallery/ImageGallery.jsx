@@ -1,9 +1,11 @@
 import css from 'components/ImageGallery/ImageGallery.module.css';
 import { Component } from 'react';
+import PropTypes from 'prop-types';
 import axiosFetchPictures from 'utils/api';
 import ImageGalleryItem from 'components/ImageGalleryItem/ImageGalleryItem';
 import Button from 'components/Button/Button';
 import Modal from 'components/Modal/Modal';
+//import { Oval } from 'react-loader-spinner';
 
 class ImageGallery extends Component {
   state = {
@@ -123,5 +125,9 @@ class ImageGallery extends Component {
     );
   }
 }
+
+ImageGallery.propTypes = {
+  query: PropTypes.string.isRequired,
+};
 
 export default ImageGallery;
