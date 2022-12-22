@@ -106,6 +106,19 @@ class ImageGallery extends Component {
             </div>
           </Modal>
         )}
+        {this.state.isLoading && (
+          <Modal
+            closeModal={() => {
+              if (!this.state.isLoading) {
+                this.setState({ isModalOpened: false });
+              }
+            }}
+          >
+            <div className={css['spinner']}>
+              <p>Loading...</p>
+            </div>
+          </Modal>
+        )}
       </>
     );
   }

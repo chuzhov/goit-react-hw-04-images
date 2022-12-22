@@ -22,3 +22,9 @@
   background-color: lightsalmon;
   color: darkred;
 }
+
+.spinner {
+  background-color: transparent;
+  color: white;
+  font-size: 5rem;
+}
