@@ -17,6 +17,7 @@ async function axiosFetchPictures(query, currentPageNum, per_page) {
   const url = `${hostURL}?key=${API_KEY}&q=${searchParams.q}&page=${currentPageNum}&per_page=${per_page}`;
 
   const { data } = await axios.get(url);
+
   return data;
 }
 
