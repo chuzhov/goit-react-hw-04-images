@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import SearchBar from './SearchBar/SearchBar';
 import axiosFetchPictures from 'utils/api';
 import ImageGallery from './ImageGallery/ImageGallery';
@@ -6,8 +6,8 @@ import Button from 'components/Button/Button';
 import Modal from 'components/Modal/Modal';
 import css from './App.module.css';
 
-export class App extends Component {
-  state = {
+export const App = () => {
+  const old_state = {
     query: '',
     images: [],
     currentPage: 1,
@@ -18,100 +18,131 @@ export class App extends Component {
     error: null,
   };
 
-  getQuery = newQuery => {
-    this.setState(() => {
-      if (this.state.query !== newQuery) return { query: newQuery };
+  const [query, setQuery] = useState('');
+  const [images, setImages] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalHits, setTotalHits] = useState(0);
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [modalData, setModalData] = useState({ imageURL: '', alt: '' });
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  const getQuery = newQuery => {
+    setQuery(() => {
+      console.log('Old query: ', query);
+      console.log('Return: ', query !== newQuery ? newQuery : query);
+      debugger;
+      return query !== newQuery ? newQuery : query;
     });
+    console.log('Result query: ', query);
   };
 
-  static PER_PAGE = 12;
+  const PER_PAGE = 12;
 
-  async componentDidUpdate(prevProps, prevState) {
-    const isNewQuery = this.state.query !== prevState.query;
-
+  const getImages = async () => {
     try {
-      if (isNewQuery || this.state.currentPage !== prevState.currentPage) {
-        this.setState({ isLoading: true });
-        isNewQuery && this.setState({ currentPage: 1 });
+      const { hits, totalHits } = await axiosFetchPictures(
+        query,
+        currentPage,
+        PER_PAGE
+      );
 
-        const { hits, totalHits } = await axiosFetchPictures(
-          this.state.query,
-          this.state.currentPage,
-          App.PER_PAGE
-        );
-
-        const arr = isNewQuery || totalHits === 0 ? [] : this.state.images;
-
-        this.setState({
-          images: [...arr, ...hits],
-          totalHits,
-          isLoading: false,
-        });
-      }
+      setTotalHits(totalHits);
+      return hits;
     } catch (error) {
-      this.setState({ isLoading: false, error: error, isModalOpened: true });
+      setError(error);
+      setModalOpen(true);
+    } finally {
+      setIsLoading(false);
     }
-  }
+  };
 
-  increasePageNumber = () => {
-    this.setState(prevState => {
-      return { currentPage: prevState.currentPage + 1 };
+  useEffect(() => {
+    if (query === '') return;
+    setImages(arr => [...getImages()]);
+  }, [query]);
+
+  useEffect(() => {
+    if (query === '') return;
+    setImages(arr => [...arr, ...getImages()]);
+  }, [currentPage]);
+
+  // useEffect(async () => {
+  //   const isNewQuery = this.state.query !== prevState.query;
+
+  //   try {
+  //     if (isNewQuery || this.state.currentPage !== prevState.currentPage) {
+  //       this.setState({ isLoading: true });
+  //       isNewQuery && this.setState({ currentPage: 1 });
+
+  //       const { hits, totalHits } = await axiosFetchPictures(
+  //         this.state.query,
+  //         this.state.currentPage,
+  //         App.PER_PAGE
+  //       );
+
+  //       const arr = isNewQuery || totalHits === 0 ? [] : this.state.images;
+
+  //       setImages(arr => [...arr, ...hits]);
+  //     }
+  //   } catch (error) {
+  //     setIsLoading(false);
+  //     setError(error);
+  //     setModalOpen(true);
+  //   }
+  // }, [currentPage, query]);
+
+  const increasePageNumber = () => {
+    setCurrentPage(prevState => prevState + 1);
+  };
+
+  const openModal = event => {
+    setModalOpen(true);
+    setModalData({
+      imageURL: event.currentTarget.id,
+      alt: event.currentTarget.alt,
     });
   };
 
-  openModal = event => {
-    this.setState({
-      isModalOpened: true,
-      modalData: {
-        imageURL: event.currentTarget.id,
-        alt: event.currentTarget.alt,
-      },
-    });
+  const closeModal = () => {
+    setModalOpen(false);
+    setError(null);
   };
 
-  closeModal = () => {
-    this.setState({ isModalOpened: false, error: null });
-  };
-
-  render() {
-    return (
-      <div>
-        <SearchBar getQuery={this.getQuery} />
-        <ImageGallery images={this.state.images} onOpenModal={this.openModal} />
-        {this.state.currentPage * App.PER_PAGE < this.state.totalHits && (
-          <Button onClickHandler={this.increasePageNumber} />
-        )}
-        {this.state.isModalOpened && (
-          <Modal closeModal={this.closeModal}>
-            <img
-              src={this.state.modalData.imageURL}
-              alt={this.state.modalData.alt}
-            />
-          </Modal>
-        )}
-        {this.state.isModalOpened && this.state.error && (
-          <Modal closeModal={this.closeModal}>
-            <div className={css['error']}>
-              <p>Error during getting data from server:</p>
-              <h2>{this.state.error.message}</h2>
-              <p>Please, press ESC to continue</p>
-            </div>
-          </Modal>
-        )}
-        {this.state.isLoading && (
-          <Modal
-            closeModal={() => {
-              if (!this.state.isLoading) {
-                this.setState({ isModalOpened: false });
-              }
-            }}
-          >
-            <div className={css['spinner']}>
-              <p>Loading...</p>
-            </div>
-          </Modal>
-        )}
-      </div>
-    );
-  }
-}
+  return (
+    <div>
+      <SearchBar getQuery={getQuery} />
+      <ImageGallery images={images} onOpenModal={openModal} />
+      {currentPage * PER_PAGE < totalHits && (
+        <Button onClickHandler={increasePageNumber} />
+      )}
+      {isModalOpen && (
+        <Modal closeModal={closeModal}>
+          <img src={modalData.imageURL} alt={modalData.alt} />
+        </Modal>
+      )}
+      {isModalOpen && error && (
+        <Modal closeModal={closeModal}>
+          <div className={css['error']}>
+            <p>Error during getting data from server:</p>
+            <h2>{error.message}</h2>
+            <p>Please, press ESC to continue</p>
+          </div>
+        </Modal>
+      )}
+      {isLoading && (
+        <Modal
+          closeModal={() => {
+            if (!isLoading) {
+              setModalOpen(false);
+            }
+          }}
+        >
+          <div className={css['spinner']}>
+            <p>Loading...</p>
+          </div>
+        </Modal>
+      )}
+    </div>
+  );
+};
