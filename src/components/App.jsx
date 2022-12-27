@@ -17,10 +17,8 @@ export const App = () => {
   const [error, setError] = useState(null);
 
   const getQuery = newQuery => {
-    debugger;
     if (newQuery !== query) {
       setQuery(newQuery);
-      debugger;
     }
   };
 
@@ -37,7 +35,10 @@ export const App = () => {
           );
           currentPage === 1 && setTotalHits(totalHits);
         })
-        .catch(err => console.log(err))
+        .catch(err => {
+          setError(err);
+          setModalOpen(true);
+        })
         .finally(() => setIsLoading(false));
     };
     setSearchNews();
@@ -48,7 +49,6 @@ export const App = () => {
   };
 
   const openModal = event => {
-    console.dir(event.target);
     setModalOpen(true);
     setModalData({
       imageURL: event.currentTarget.id,
