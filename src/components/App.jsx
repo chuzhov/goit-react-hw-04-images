@@ -7,17 +7,6 @@ import Modal from 'components/Modal/Modal';
 import css from './App.module.css';
 
 export const App = () => {
-  const old_state = {
-    query: '',
-    images: [],
-    currentPage: 1,
-    totalHits: 0,
-    isModalOpened: false,
-    modalData: { imageURL: '', alt: '' },
-    isLoading: false,
-    error: null,
-  };
-
   const [query, setQuery] = useState('');
   const [images, setImages] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -28,80 +17,66 @@ export const App = () => {
   const [error, setError] = useState(null);
 
   const getQuery = newQuery => {
-    setQuery(() => {
-      console.log('Old query: ', query);
-      console.log('Return: ', query !== newQuery ? newQuery : query);
+    debugger;
+    if (newQuery !== query) {
+      setQuery(newQuery);
       debugger;
-      return query !== newQuery ? newQuery : query;
-    });
-    console.log('Result query: ', query);
+    }
   };
 
   const PER_PAGE = 12;
 
-  const getImages = async () => {
-    try {
-      const { hits, totalHits } = await axiosFetchPictures(
-        query,
-        currentPage,
-        PER_PAGE
-      );
-
-      setTotalHits(totalHits);
-      return hits;
-    } catch (error) {
-      setError(error);
-      setModalOpen(true);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   useEffect(() => {
-    if (query === '') return;
-    setImages(arr => [...getImages()]);
-  }, [query]);
-
-  useEffect(() => {
-    if (query === '') return;
-    setImages(arr => [...arr, ...getImages()]);
-  }, [currentPage]);
-
-  // useEffect(async () => {
-  //   const isNewQuery = this.state.query !== prevState.query;
-
-  //   try {
-  //     if (isNewQuery || this.state.currentPage !== prevState.currentPage) {
-  //       this.setState({ isLoading: true });
-  //       isNewQuery && this.setState({ currentPage: 1 });
-
-  //       const { hits, totalHits } = await axiosFetchPictures(
-  //         this.state.query,
-  //         this.state.currentPage,
-  //         App.PER_PAGE
-  //       );
-
-  //       const arr = isNewQuery || totalHits === 0 ? [] : this.state.images;
-
-  //       setImages(arr => [...arr, ...hits]);
-  //     }
-  //   } catch (error) {
-  //     setIsLoading(false);
-  //     setError(error);
-  //     setModalOpen(true);
-  //   }
-  // }, [currentPage, query]);
+    if (!query) return;
+    const setSearchNews = () => {
+      setIsLoading(true);
+      axiosFetchPictures(query, currentPage, PER_PAGE)
+        .then(({ hits, totalHits }) => {
+          setImages(images =>
+            currentPage === 1 ? hits : [...images, ...hits]
+          );
+          currentPage === 1 && setTotalHits(totalHits);
+        })
+        .catch(err => console.log(err))
+        .finally(() => setIsLoading(false));
+    };
+    setSearchNews();
+  }, [query, currentPage]);
 
   const increasePageNumber = () => {
     setCurrentPage(prevState => prevState + 1);
   };
 
   const openModal = event => {
+    console.dir(event.target);
     setModalOpen(true);
     setModalData({
       imageURL: event.currentTarget.id,
-      alt: event.currentTarget.alt,
+      alt: event.currentTarget.alt ?? event.target.alt,
     });
+  };
+
+  useEffect(() => {
+    if (isModalOpen) {
+      window.addEventListener('keydown', handleCloseModal);
+      document.getElementById('backdrop').addEventListener('click', closeModal);
+    }
+
+    return () => {
+      if (isModalOpen) {
+        window.removeEventListener('keydown', handleCloseModal);
+        document
+          .getElementById('backdrop')
+          .removeEventListener('click', closeModal);
+      }
+    };
+  }, [isModalOpen]);
+
+  const handleCloseModal = event => {
+    if (event.target === event.currentTarget || event.code === 'Escape') {
+      setModalOpen(false);
+      setError(null);
+    }
   };
 
   const closeModal = () => {

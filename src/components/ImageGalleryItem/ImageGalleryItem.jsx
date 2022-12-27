@@ -8,6 +8,7 @@ const ImageGalleryItem = ({ url, alt, largeURL, onOpenModal }) => {
       className={css['item']}
       data={largeURL}
       onClick={event => onOpenModal(event)}
+      alt={alt}
     >
       <img src={url} width="240" alt={alt} />
     </li>
