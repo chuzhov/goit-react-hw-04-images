@@ -68,6 +68,7 @@ export const App = () => {
         document
           .getElementById('backdrop')
           .removeEventListener('click', closeModal);
+        setError(null);
       }
     };
   }, [isModalOpen]);
@@ -75,7 +76,6 @@ export const App = () => {
   const handleCloseModal = event => {
     if (event.target === event.currentTarget || event.code === 'Escape') {
       setModalOpen(false);
-      setError(null);
     }
   };
 
