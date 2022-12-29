@@ -1,12 +1,18 @@
 import { createPortal } from 'react-dom';
 import PropTypes from 'prop-types';
 import css from './Modal.module.css';
+import { useEffect } from 'react';
 
 const modalRoot = document.querySelector('#backdrop');
 
-const Modal = ({ children, handleCloseModal }) => {
+const Modal = ({ children, closeModal }) => {
   return createPortal(
-    <div className={css['backdrop']} onClick={handleCloseModal}>
+    <div
+      tabIndex="-1"
+      className={css['backdrop']}
+      onClick={closeModal}
+      onKeyDown={closeModal}
+    >
       <div className={css['modal']}>{children}</div>
     </div>,
     modalRoot

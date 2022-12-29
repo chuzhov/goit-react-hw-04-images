@@ -56,33 +56,18 @@ export const App = () => {
     });
   };
 
-  useEffect(() => {
-    console.log("I'm useEffect in ModalOpen. The status is ", isModalOpen);
-    if (isModalOpen) {
-      window.addEventListener('keydown', handleCloseModal);
-      document.getElementById('backdrop').addEventListener('click', closeModal);
-    }
-
-    return () => {
-      if (isModalOpen) {
-        window.removeEventListener('keydown', handleCloseModal);
-        document
-          .getElementById('backdrop')
-          .removeEventListener('click', closeModal);
-        setError(null);
-      }
-    };
-  }, [isModalOpen]);
+  // const handleCloseModal = event => {
+  //   if (event.target === event.currentTarget || event.code === 'Escape') {
+  //     setModalOpen(false);
+  //   }
+  // };
 
   const handleCloseModal = event => {
-    if (event.target === event.currentTarget || event.code === 'Escape') {
+    console.dir(event);
+    if (event.target === event.currentTarget || event.key === 'Escape') {
       setModalOpen(false);
+      setError(null);
     }
-  };
-
-  const closeModal = () => {
-    setModalOpen(false);
-    setError(null);
   };
 
   return (
@@ -93,12 +78,12 @@ export const App = () => {
         <Button onClickHandler={increasePageNumber} />
       )}
       {isModalOpen && (
-        <Modal closeModal={closeModal}>
+        <Modal closeModal={handleCloseModal}>
           <img src={modalData.imageURL} alt={modalData.alt} />
         </Modal>
       )}
       {isModalOpen && error && (
-        <Modal closeModal={closeModal}>
+        <Modal closeModal={handleCloseModal}>
           <div className={css['error']}>
             <p>Error during getting data from server:</p>
             <h2>{error.message}</h2>
