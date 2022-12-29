@@ -57,6 +57,7 @@ export const App = () => {
   };
 
   useEffect(() => {
+    console.log("I'm useEffect in ModalOpen. The status is ", isModalOpen);
     if (isModalOpen) {
       window.addEventListener('keydown', handleCloseModal);
       document.getElementById('backdrop').addEventListener('click', closeModal);
