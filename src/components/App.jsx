@@ -56,14 +56,7 @@ export const App = () => {
     });
   };
 
-  // const handleCloseModal = event => {
-  //   if (event.target === event.currentTarget || event.code === 'Escape') {
-  //     setModalOpen(false);
-  //   }
-  // };
-
   const handleCloseModal = event => {
-    console.dir(event);
     if (event.target === event.currentTarget || event.key === 'Escape') {
       setModalOpen(false);
       setError(null);

@@ -1,7 +1,6 @@
 import { createPortal } from 'react-dom';
 import PropTypes from 'prop-types';
 import css from './Modal.module.css';
-import { useEffect } from 'react';
 
 const modalRoot = document.querySelector('#backdrop');
 
