@@ -12,7 +12,7 @@ const Modal = ({ children, closeModal }) => {
     return () => {
       window.removeEventListener('keydown', closeModal);
     };
-  }, []);
+  }, [closeModal]);
 
   return createPortal(
     <div
